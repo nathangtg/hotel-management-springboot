@@ -13,14 +13,14 @@ output "container_app_url" {
   value       = "https://${azurerm_container_app.main.ingress[0].fqdn}"
 }
 
-output "mysql_server_fqdn" {
-  description = "MySQL server FQDN"
-  value       = azurerm_mysql_flexible_server.main.fqdn
+output "sql_server_fqdn" {
+  description = "SQL Server FQDN"
+  value       = azurerm_mssql_server.main.fully_qualified_domain_name
 }
 
-output "mysql_database_name" {
-  description = "MySQL database name"
-  value       = azurerm_mysql_flexible_database.main.name
+output "sql_database_name" {
+  description = "SQL Database name"
+  value       = azurerm_mssql_database.main.name
 }
 
 output "log_analytics_workspace_id" {

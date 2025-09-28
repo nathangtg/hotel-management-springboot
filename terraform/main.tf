@@ -24,33 +24,15 @@ resource "azurerm_container_registry" "main" {
   }
 }
 
-# MySQL Flexible Server (Burstable tier for cost optimization)
-resource "azurerm_mysql_flexible_server" "main" {
-  name                   = "mysql-${var.project_name}-${var.environment}"
-  resource_group_name    = azurerm_resource_group.main.name
-  location              = azurerm_resource_group.main.location
-  
-  administrator_login    = var.mysql_admin_login
-  administrator_password = var.mysql_admin_password
-  
-  backup_retention_days  = 7
-  geo_redundant_backup_enabled = false  # Disable for cost savings
-  
-  sku_name = "B_Standard_B1s"  # Most cost-effective burstable tier
-  version  = "8.0.21"  # Use supported version
-  
-  zone = "1"
-  
-  high_availability {
-    mode = "SameZone"  # Less expensive than ZoneRedundant
-  }
-  
-  storage {
-    auto_grow_enabled  = true
-    io_scaling_enabled = false  # Disable for cost savings
-    iops              = 360    # Minimum IOPS
-    size_gb           = 20     # Minimum size
-  }
+# SQL Server (Basic tier for cost optimization)
+resource "azurerm_mssql_server" "main" {
+  name                         = "sql-${var.project_name}-${var.environment}"
+  resource_group_name          = azurerm_resource_group.main.name
+  location                    = azurerm_resource_group.main.location
+  version                     = "12.0"
+  administrator_login         = var.mysql_admin_login
+  administrator_login_password = var.mysql_admin_password
+  minimum_tls_version         = "1.2"
 
   tags = {
     Environment = var.environment
@@ -58,13 +40,28 @@ resource "azurerm_mysql_flexible_server" "main" {
   }
 }
 
-# Database
-resource "azurerm_mysql_flexible_database" "main" {
-  name                = "hoteldb"
-  resource_group_name = azurerm_resource_group.main.name
-  server_name        = azurerm_mysql_flexible_server.main.name
-  charset            = "utf8mb4"
-  collation          = "utf8mb4_unicode_ci"
+# SQL Database (Basic tier for cost optimization)
+resource "azurerm_mssql_database" "main" {
+  name           = "hoteldb"
+  server_id      = azurerm_mssql_server.main.id
+  collation      = "SQL_Latin1_General_CP1_CI_AS"
+  license_type   = "LicenseIncluded"
+  max_size_gb    = 2
+  sku_name       = "Basic"  # Most cost-effective option (~$5/month)
+  zone_redundant = false
+
+  tags = {
+    Environment = var.environment
+    Project     = var.project_name
+  }
+}
+
+# Firewall rule to allow Azure services
+resource "azurerm_mssql_firewall_rule" "allow_azure_services" {
+  name             = "AllowAzureServices"
+  server_id        = azurerm_mssql_server.main.id
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "0.0.0.0"
 }
 
 # Container App Environment
@@ -118,7 +115,7 @@ resource "azurerm_container_app" "main" {
       
       env {
         name  = "SPRING_DATASOURCE_URL"
-        value = "jdbc:mysql://${azurerm_mysql_flexible_server.main.fqdn}:3306/${azurerm_mysql_flexible_database.main.name}?useSSL=true&requireSSL=false&serverTimezone=UTC"
+        value = "jdbc:sqlserver://${azurerm_mssql_server.main.fully_qualified_domain_name}:1433;database=${azurerm_mssql_database.main.name};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
       }
       
       env {
@@ -138,7 +135,7 @@ resource "azurerm_container_app" "main" {
       
       env {
         name  = "SPRING_JPA_DATABASE_PLATFORM"
-        value = "org.hibernate.dialect.MySQLDialect"
+        value = "org.hibernate.dialect.SQLServerDialect"
       }
 
       env {

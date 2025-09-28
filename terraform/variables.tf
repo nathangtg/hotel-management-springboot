@@ -13,7 +13,7 @@ variable "environment" {
 variable "location" {
   description = "Azure region"
   type        = string
-  default     = "Southeast Asia"
+  default     = "UK South"
 }
 
 variable "image_tag" {
