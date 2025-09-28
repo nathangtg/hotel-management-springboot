@@ -23,9 +23,6 @@ import com.nathangtg.hotel_management.services.RoomService;
 import com.nathangtg.hotel_management.services.UserService;
 
 import jakarta.validation.Valid;
-import com.nathangtg.hotel_management.api.models.User;
-import com.nathangtg.hotel_management.services.RoomService;
-import com.nathangtg.hotel_management.services.UserService;
 
 @RestController
 @RequestMapping("/api/rooms")
