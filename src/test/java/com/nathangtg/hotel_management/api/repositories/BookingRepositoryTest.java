@@ -1,6 +1,7 @@
 package com.nathangtg.hotel_management.api.repositories;
 
 import com.nathangtg.hotel_management.api.models.Booking;
+import com.nathangtg.hotel_management.api.models.Hotel;
 import com.nathangtg.hotel_management.api.models.Room;
 import com.nathangtg.hotel_management.api.models.User;
 import com.nathangtg.hotel_management.config.TestConfig;
@@ -30,7 +31,11 @@ class BookingRepositoryTest {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Autowired
+    private HotelRepository hotelRepository;
+
     private User testUser;
+    private Hotel testHotel;
     private Room testRoom;
     private Booking testBooking;
 
@@ -45,11 +50,20 @@ class BookingRepositoryTest {
         testUser.setRole("USER");
         testUser = userRepository.save(testUser);
 
+        testHotel = new Hotel();
+        testHotel.setName("Test Hotel");
+        testHotel.setAddress("123 Test Street");
+        testHotel.setPhone("123-456-7890");
+        testHotel.setEmail("testhotel@example.com");
+        testHotel = hotelRepository.save(testHotel);
+
         testRoom = new Room();
         testRoom.setRoomNumber("101");
         testRoom.setRoomType("Standard");
+        testRoom.setCapacity(2);
         testRoom.setPricePerNight(BigDecimal.valueOf(100.00));
         testRoom.setIsAvailable(true);
+        testRoom.setHotel(testHotel);
         testRoom = roomRepository.save(testRoom);
 
         testBooking = new Booking();
