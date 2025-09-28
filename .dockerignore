@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+README.md
+
+# Documentation
+docs/
+*.md
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Build artifacts
+target/
+!target/hotel-management-*.jar
+build/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Terraform
+terraform/
+*.tf
+*.tfstate*
+
+# CI/CD
+.github/
+
+# Dependencies (will be downloaded in build stage)
+.m2/
