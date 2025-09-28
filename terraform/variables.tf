@@ -25,7 +25,7 @@ variable "image_tag" {
 variable "github_repository" {
   description = "GitHub repository in format owner/repo"
   type        = string
-  default     = "nathangtg/hotel-management" # Update this with your GitHub username
+  default     = "nathangtg/hotel-management" 
 }
 
 variable "mysql_admin_login" {
@@ -38,5 +38,5 @@ variable "mysql_admin_password" {
   description = "MySQL administrator password"
   type        = string
   sensitive   = true
-  default     = "P@ssw0rd123!" # Change this in production
+  default     = "P@ssw0rd123!" 
 }
