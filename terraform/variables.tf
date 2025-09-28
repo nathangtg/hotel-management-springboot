@@ -25,7 +25,7 @@ variable "image_tag" {
 variable "github_repository" {
   description = "GitHub repository in format owner/repo"
   type        = string
-  default     = "nathangtg/hotel-management" 
+  default     = "nathangtg/hotel-management-springboot" 
 }
 
 variable "mysql_admin_login" {
