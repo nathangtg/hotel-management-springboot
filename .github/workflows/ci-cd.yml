@@ -157,7 +157,7 @@ jobs:
         working-directory: ./terraform
         run: terraform init
 
-      - name: Get first image tag  
+      - name: Get first image tag
         id: image-tag
         run: |
           TAGS="${{ needs.build-and-push.outputs.image-tag }}"
