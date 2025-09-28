@@ -37,7 +37,7 @@ resource "azurerm_mysql_flexible_server" "main" {
   geo_redundant_backup_enabled = false  # Disable for cost savings
   
   sku_name = "B_Standard_B1s"  # Most cost-effective burstable tier
-  version  = "8.0"
+  version  = "8.0.21"  # Use supported version
   
   zone = "1"
   
